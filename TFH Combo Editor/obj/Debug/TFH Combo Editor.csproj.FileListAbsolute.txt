@@ -13,3 +13,17 @@ C:\Users\Ninja\source\repos\TFH\TFH Combo Editor\TFH Combo Editor\obj\Debug\TFH 
 C:\Users\Ninja\source\repos\TFH\TFH Combo Editor\TFH Combo Editor\obj\Debug\TFH Combo Editor.csproj.CoreCompileInputs.cache
 C:\Users\Ninja\source\repos\TFH\TFH Combo Editor\TFH Combo Editor\obj\Debug\TFH Combo Editor.exe
 C:\Users\Ninja\source\repos\TFH\TFH Combo Editor\TFH Combo Editor\obj\Debug\TFH Combo Editor.pdb
+D:\TFH\TFHComboEditor\TFH Combo Editor\bin\Debug\TFH Combo Editor.exe.config
+D:\TFH\TFHComboEditor\TFH Combo Editor\obj\Debug\TFH Combo Editor.exe
+D:\TFH\TFHComboEditor\TFH Combo Editor\obj\Debug\TFH Combo Editor.pdb
+D:\TFH\TFHComboEditor\TFH Combo Editor\bin\Debug\TFH Combo Editor.exe
+D:\TFH\TFHComboEditor\TFH Combo Editor\bin\Debug\TFH Combo Editor.pdb
+D:\TFH\TFHComboEditor\TFH Combo Editor\obj\Debug\TFH Combo Editor.csprojResolveAssemblyReference.cache
+D:\TFH\TFHComboEditor\TFH Combo Editor\obj\Debug\MainWindow.g.cs
+D:\TFH\TFHComboEditor\TFH Combo Editor\obj\Debug\App.g.cs
+D:\TFH\TFHComboEditor\TFH Combo Editor\obj\Debug\TFH Combo Editor_MarkupCompile.cache
+D:\TFH\TFHComboEditor\TFH Combo Editor\obj\Debug\TFH Combo Editor_MarkupCompile.lref
+D:\TFH\TFHComboEditor\TFH Combo Editor\obj\Debug\MainWindow.baml
+D:\TFH\TFHComboEditor\TFH Combo Editor\obj\Debug\TFH Combo Editor.g.resources
+D:\TFH\TFHComboEditor\TFH Combo Editor\obj\Debug\TFH_Combo_Editor.Properties.Resources.resources
+D:\TFH\TFHComboEditor\TFH Combo Editor\obj\Debug\TFH Combo Editor.csproj.GenerateResource.Cache

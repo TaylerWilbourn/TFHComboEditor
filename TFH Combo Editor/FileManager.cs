@@ -68,32 +68,60 @@ namespace TFH_Combo_Editor
 		{
 			//This is the real magic
 			//ba4 = new byte[] { 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF };
-			ba4 = new byte[inputList.Count * 5]; //change later
 			List<InputFrame> uniqueInputs = new List<InputFrame>();
 
 			//construct unique inputs list
-			InputFrame lastInput = inputList[0];
+			int durationCounter = 0;
+
+			//initialize first input states
+			InputFrame lastInput = new InputFrame(inputList[0].direction, inputList[0].a, inputList[0].b, inputList[0].c, inputList[0].d);
+			lastInput.aState = GetButtonState(lastInput, lastInput.a, false);
+			lastInput.bState = GetButtonState(lastInput, lastInput.b, false);
+			lastInput.cState = GetButtonState(lastInput, lastInput.c, false);
+			lastInput.dState = GetButtonState(lastInput, lastInput.d, false);
+
 			for (int index = 0; index < inputList.Count; index++)
 			{
 				InputFrame input = inputList[index];
 
 				//if any raw input has changed, or if the last frame was a one-off special case
-				bool inputChanged = ((input.direction != lastInput.direction) || (input.a != lastInput.a) || (input.b != lastInput.b) || (input.c != lastInput.c) || (input.d != lastInput.d) || lastInput.isSpecialFrame);
+				bool inputChanged = (((input.direction != lastInput.direction) || (input.a != lastInput.a) || (input.b != lastInput.b) || (input.c != lastInput.c) || (input.d != lastInput.d) || lastInput.isSpecialFrame) && durationCounter < 255 && index != 0);
 				if (inputChanged)
 				{
-					input.aState = GetButtonState(input.a, lastInput.a);
-					input.bState = GetButtonState(input.b, lastInput.b);
-					input.cState = GetButtonState(input.c, lastInput.c);
-					input.dState = GetButtonState(input.d, lastInput.d);
+					lastInput.counter = durationCounter;
+					input.aState = GetButtonState(input, input.a, lastInput.a);
+					input.bState = GetButtonState(input, input.b, lastInput.b);
+					input.cState = GetButtonState(input, input.c, lastInput.c);
+					input.dState = GetButtonState(input, input.d, lastInput.d);
+
+					uniqueInputs.Add(lastInput);
+					lastInput = input;
+					durationCounter = 1;
+				}
+				else
+				{
+					durationCounter++;
+				}
+
+				if (index == (inputList.Count - 1))
+				{
+					//Write the final input
+					lastInput = uniqueInputs[uniqueInputs.Count - 1];
+					input.counter = durationCounter;
+					input.aState = GetButtonState(input, input.a, lastInput.a);
+					input.bState = GetButtonState(input, input.b, lastInput.b);
+					input.cState = GetButtonState(input, input.c, lastInput.c);
+					input.dState = GetButtonState(input, input.d, lastInput.d);
 
 					uniqueInputs.Add(input);
-					lastInput = input;
 				}
 			}
 
 
+
 			//convert unique inputs into bytes
 
+			ba4 = new byte[(uniqueInputs.Count * 6) + 1];
 			for (int index = 0; index < uniqueInputs.Count; index++)
 			{
 				int offset = index * 6;
@@ -105,6 +133,8 @@ namespace TFH_Combo_Editor
 				ba4[offset + 4] = Convert.ToByte(input.cState);
 				ba4[offset + 5] = Convert.ToByte(input.dState);
 			}
+			//terminate the input data with 0x00
+			ba4[ba4.Length - 1] = 0x00;
 		}
 
 		public void ConstructTrainingComboOptions()
@@ -128,7 +158,7 @@ namespace TFH_Combo_Editor
 			hexString = hexString.Replace(" ", "");
 			byte[] bytes = new byte[hexString.Length / 2];
 
-			for (int index = 0; index < ba1.Length; index++)
+			for (int index = 0; index < bytes.Length; index++)
 			{
 				string byteValue = hexString.Substring(index * 2, 2);
 				bytes[index] = byte.Parse(byteValue, System.Globalization.NumberStyles.HexNumber);
