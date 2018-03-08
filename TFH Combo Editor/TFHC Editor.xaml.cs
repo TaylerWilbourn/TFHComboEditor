@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,22 +21,35 @@ namespace TFH_Combo_Editor
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+		private ObservableCollection<InputFrame> inputList = CreateTestInputs();
+
 		public MainWindow()
 		{
 			InitializeComponent();
-			List<InputFrame> inputList = CreateTestInputs();
+			//List<InputFrame> inputList = CreateTestInputs();
 			FileManager FM = new FileManager();
 			FM.SaveFile(inputList);
+			inputListBox.ItemsSource = this.inputList;
 		}
 
-		public List<InputFrame> CreateTestInputs()
+		public static ObservableCollection<InputFrame> CreateTestInputs()
 		{
-			List<InputFrame> testInputs = new List<InputFrame>
+			ObservableCollection<InputFrame> testInputs = new ObservableCollection<InputFrame>
 			{
 				new InputFrame(1, true, false, false, false),
 				new InputFrame(2, false, true, false, false),
 				new InputFrame(3, false, false, true, false),
-				new InputFrame(4, false, false, false, true)
+				new InputFrame(4, false, false, false, true),
+				new InputFrame(4, false, false, false, true),
+				new InputFrame(4, false, false, false, true),
+				new InputFrame(4, false, false, false, true),
+				new InputFrame(4, false, false, false, true),
+				new InputFrame(4, false, false, false, true),
+				new InputFrame(4, false, false, false, true),
+				new InputFrame(4, false, false, false, true),
+				new InputFrame(4, false, false, false, true),
+				new InputFrame(4, false, false, false, true),
+				new InputFrame(5, false, false, false, false)
 			};
 
 			return testInputs;

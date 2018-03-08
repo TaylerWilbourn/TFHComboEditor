@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,13 +22,13 @@ namespace TFH_Combo_Editor
 
 		}
 
-		public void SaveFile(List<InputFrame> inputList)
+		public void SaveFile(ObservableCollection<InputFrame> inputList)
 		{
 			ConstructArray(inputList);
 			WriteBytesToDisk();
 		}
 
-		public void ConstructArray(List<InputFrame> inputList)
+		public void ConstructArray(ObservableCollection<InputFrame> inputList)
 		{
 			ConstructHeader();
 			ConstructCharNames();
@@ -64,11 +65,11 @@ namespace TFH_Combo_Editor
 			ba3 = HexStringToBytes(hexString);
 		}
 
-		public void ConstructInputs(List<InputFrame> inputList)
+		public void ConstructInputs(ObservableCollection<InputFrame> inputList)
 		{
 			//This is the real magic
 			//ba4 = new byte[] { 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF };
-			List<InputFrame> uniqueInputs = new List<InputFrame>();
+			ObservableCollection<InputFrame> uniqueInputs = new ObservableCollection<InputFrame>();
 
 			//construct unique inputs list
 			int durationCounter = 0;
