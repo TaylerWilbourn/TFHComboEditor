@@ -15,25 +15,25 @@ namespace TFH_Combo_Editor
 	class FileManager
 	{	
 		//byte arrays for each chunk of the file
-		byte[] ba1, ba2, ba3, ba4, ba5;
+		byte[] ba1, ba2, ba3, ba4, ba4andHalf, ba5;
 		byte[] byteArray;
 		public FileManager()
 		{
 
 		}
 
-		public void SaveFile(ObservableCollection<InputFrame> inputList)
+		public void SaveFile(ObservableCollection<InputFrame>[] inputLists)
 		{
-			ConstructArray(inputList);
+			ConstructArray(inputLists);
 			WriteBytesToDisk();
 		}
 
-		public void ConstructArray(ObservableCollection<InputFrame> inputList)
+		public void ConstructArray(ObservableCollection<InputFrame>[] inputLists)
 		{
 			ConstructHeader();
 			ConstructCharNames();
 			ConstructSeeds();
-			ConstructInputs(inputList);
+			ConstructInputs(inputLists);
 			ConstructTrainingComboOptions();
 
 			byteArray = new byte[ba1.Length + ba2.Length + ba3.Length + ba4.Length + ba5.Length];
@@ -65,77 +65,105 @@ namespace TFH_Combo_Editor
 			ba3 = HexStringToBytes(hexString);
 		}
 
-		public void ConstructInputs(ObservableCollection<InputFrame> inputList)
+		public void ConstructInputs(ObservableCollection<InputFrame>[] inputLists)
 		{
 			//This is the real magic
 			//ba4 = new byte[] { 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF, 0x00, 0xFF };
-			ObservableCollection<InputFrame> uniqueInputs = new ObservableCollection<InputFrame>();
 
-			//construct unique inputs list
-			int durationCounter = 0;
-
-			//initialize first input states
-			InputFrame lastInput = new InputFrame(inputList[0].direction, inputList[0].a, inputList[0].b, inputList[0].c, inputList[0].d);
-			lastInput.aState = GetButtonState(lastInput, lastInput.a, false);
-			lastInput.bState = GetButtonState(lastInput, lastInput.b, false);
-			lastInput.cState = GetButtonState(lastInput, lastInput.c, false);
-			lastInput.dState = GetButtonState(lastInput, lastInput.d, false);
-
-			for (int index = 0; index < inputList.Count; index++)
+			for (int whichPlayer = 0; whichPlayer < inputLists.Count(); whichPlayer++)
 			{
-				InputFrame input = inputList[index];
+				//construct unique inputs list
+				int durationCounter = 0;
 
-				//if any raw input has changed, or if the last frame was a one-off special case
-				bool inputChanged = (((input.direction != lastInput.direction) || (input.a != lastInput.a) || (input.b != lastInput.b) || (input.c != lastInput.c) || (input.d != lastInput.d) || lastInput.isSpecialFrame) && durationCounter < 255 && index != 0);
-				if (inputChanged)
+				ObservableCollection<InputFrame> inputList = inputLists[whichPlayer];
+				ObservableCollection<InputFrame> uniqueInputs = new ObservableCollection<InputFrame>();
+				//initialize first input states
+				InputFrame lastInput = new InputFrame(inputList[0].direction, inputList[0].a, inputList[0].b, inputList[0].c, inputList[0].d);
+				lastInput.aState = GetButtonState(lastInput, lastInput.a, false);
+				lastInput.bState = GetButtonState(lastInput, lastInput.b, false);
+				lastInput.cState = GetButtonState(lastInput, lastInput.c, false);
+				lastInput.dState = GetButtonState(lastInput, lastInput.d, false);
+
+				for (int index = 0; index < inputList.Count; index++)
 				{
-					lastInput.counter = durationCounter;
-					input.aState = GetButtonState(input, input.a, lastInput.a);
-					input.bState = GetButtonState(input, input.b, lastInput.b);
-					input.cState = GetButtonState(input, input.c, lastInput.c);
-					input.dState = GetButtonState(input, input.d, lastInput.d);
+					InputFrame input = inputList[index];
 
-					uniqueInputs.Add(lastInput);
-					lastInput = input;
-					durationCounter = 1;
+					//if any raw input has changed, or if the last frame was a one-off special case
+					bool inputChanged = (((input.direction != lastInput.direction) || (input.a != lastInput.a) || (input.b != lastInput.b) || (input.c != lastInput.c) || (input.d != lastInput.d) || lastInput.isSpecialFrame) && durationCounter < 255 && index != 0);
+					if (inputChanged)
+					{
+						lastInput.counter = durationCounter;
+						input.aState = GetButtonState(input, input.a, lastInput.a);
+						input.bState = GetButtonState(input, input.b, lastInput.b);
+						input.cState = GetButtonState(input, input.c, lastInput.c);
+						input.dState = GetButtonState(input, input.d, lastInput.d);
+
+						uniqueInputs.Add(lastInput);
+						lastInput = input;
+						durationCounter = 1;
+					}
+					else
+					{
+						durationCounter++;
+					}
+
+					if (index == (inputList.Count - 1))
+					{
+						//Write the final input
+						lastInput = uniqueInputs[uniqueInputs.Count - 1];
+						input.counter = durationCounter;
+						input.aState = GetButtonState(input, input.a, lastInput.a);
+						input.bState = GetButtonState(input, input.b, lastInput.b);
+						input.cState = GetButtonState(input, input.c, lastInput.c);
+						input.dState = GetButtonState(input, input.d, lastInput.d);
+
+						uniqueInputs.Add(input);
+					}
 				}
-				else
+
+
+
+				//convert unique inputs into bytes
+				//hacks
+				if (whichPlayer == 0)
 				{
-					durationCounter++;
+					ba4 = new byte[(uniqueInputs.Count * 6) + 1];
+					for (int index = 0; index < uniqueInputs.Count; index++)
+					{
+						int offset = index * 6;
+						InputFrame input = uniqueInputs[index];
+						ba4[offset + 0] = Convert.ToByte(input.counter);
+						ba4[offset + 1] = Convert.ToByte(input.direction);
+						ba4[offset + 2] = Convert.ToByte(input.aState);
+						ba4[offset + 3] = Convert.ToByte(input.bState);
+						ba4[offset + 4] = Convert.ToByte(input.cState);
+						ba4[offset + 5] = Convert.ToByte(input.dState);
+					}
+					//terminate the input data with 0x00
+					ba4[ba4.Length - 1] = 0x00;
 				}
-
-				if (index == (inputList.Count - 1))
+				else if (whichPlayer == 1)
 				{
-					//Write the final input
-					lastInput = uniqueInputs[uniqueInputs.Count - 1];
-					input.counter = durationCounter;
-					input.aState = GetButtonState(input, input.a, lastInput.a);
-					input.bState = GetButtonState(input, input.b, lastInput.b);
-					input.cState = GetButtonState(input, input.c, lastInput.c);
-					input.dState = GetButtonState(input, input.d, lastInput.d);
-
-					uniqueInputs.Add(input);
+					ba4andHalf = new byte[(uniqueInputs.Count * 6) + 1];
+					for (int index = 0; index < uniqueInputs.Count; index++)
+					{
+						int offset = index * 6;
+						InputFrame input = uniqueInputs[index];
+						ba4andHalf[offset + 0] = Convert.ToByte(input.counter);
+						ba4andHalf[offset + 1] = Convert.ToByte(input.direction);
+						ba4andHalf[offset + 2] = Convert.ToByte(input.aState);
+						ba4andHalf[offset + 3] = Convert.ToByte(input.bState);
+						ba4andHalf[offset + 4] = Convert.ToByte(input.cState);
+						ba4andHalf[offset + 5] = Convert.ToByte(input.dState);
+					}
+					//terminate the input data with 0x00
+					ba4[ba4.Length - 1] = 0x00;
 				}
 			}
-
-
-
-			//convert unique inputs into bytes
-
-			ba4 = new byte[(uniqueInputs.Count * 6) + 1];
-			for (int index = 0; index < uniqueInputs.Count; index++)
-			{
-				int offset = index * 6;
-				InputFrame input = uniqueInputs[index];
-				ba4[offset + 0] = Convert.ToByte(input.counter);
-				ba4[offset + 1] = Convert.ToByte(input.direction);
-				ba4[offset + 2] = Convert.ToByte(input.aState);
-				ba4[offset + 3] = Convert.ToByte(input.bState);
-				ba4[offset + 4] = Convert.ToByte(input.cState);
-				ba4[offset + 5] = Convert.ToByte(input.dState);
-			}
-			//terminate the input data with 0x00
-			ba4[ba4.Length - 1] = 0x00;
+			byte[] ba4copy = ba4;
+			ba4 = new byte[ba4.Length + ba4andHalf.Length];
+			System.Buffer.BlockCopy(ba4copy, 0, ba4, 0, ba4copy.Length);
+			System.Buffer.BlockCopy(ba4andHalf, 0, ba4, ba4copy.Length, ba4andHalf.Length);
 		}
 
 		public void ConstructTrainingComboOptions()
@@ -149,7 +177,7 @@ namespace TFH_Combo_Editor
 		{
 			string fileName = "testFileName.tfhc";
 			int blockLength = byteArray.Length;
-			FileStream FS = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+			FileStream FS = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
 
 			FS.Write(byteArray, 0, blockLength);
 		}

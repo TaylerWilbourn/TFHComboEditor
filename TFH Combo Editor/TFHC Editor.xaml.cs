@@ -21,18 +21,22 @@ namespace TFH_Combo_Editor
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		private ObservableCollection<InputFrame> inputList = CreateTestInputs();
+		private FileManager FM;
+		private ObservableCollection<InputFrame>[] inputLists;
 
 		public MainWindow()
-		{
+		{ 
 			InitializeComponent();
 			//List<InputFrame> inputList = CreateTestInputs();
-			FileManager FM = new FileManager();
-			FM.SaveFile(inputList);
-			inputListBox.ItemsSource = this.inputList;
+			FM = new FileManager();
+			//FM.SaveFile(inputList);
+			ObservableCollection<InputFrame> p1InputList = CreateTestInputs();
+			ObservableCollection<InputFrame> p2InputList = CreateTestInputs();
+			this.inputLists = new ObservableCollection<InputFrame>[] { p1InputList, p2InputList };
+			inputListBox.ItemsSource = p1InputList;
 		}
 
-		public static ObservableCollection<InputFrame> CreateTestInputs()
+		public ObservableCollection<InputFrame> CreateTestInputs()
 		{
 			ObservableCollection<InputFrame> testInputs = new ObservableCollection<InputFrame>
 			{
@@ -53,6 +57,11 @@ namespace TFH_Combo_Editor
 			};
 
 			return testInputs;
+		}
+
+		private void SaveButton_Click(object sender, RoutedEventArgs e)
+		{
+			FM.SaveFile(this.inputLists);
 		}
 	}
 }
