@@ -4,12 +4,68 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TFH_Combo_Editor"
-             mc:Ignorable="d" 
-             d:DesignHeight="40" d:DesignWidth="300">
-    <Grid Background="White">
-        <CheckBox x:Name="checkBoxA" Content="A" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="93,10,0,0" IsChecked="{Binding aChecked, Mode=TwoWay}"/>
-        <CheckBox x:Name="checkBoxB" Content="B" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="126,10,0,0" IsChecked="{Binding bChecked, Mode=TwoWay}"/>
-        <CheckBox x:Name="checkBoxC" Content="C" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="158,10,0,0" IsChecked="{Binding cChecked, Mode=TwoWay}"/>
-        <CheckBox x:Name="checkBoxD" Content="D" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="190,10,0,0" IsChecked="{Binding dChecked, Mode=TwoWay}"/>
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style x:Key="Direction" TargetType="{x:Type RadioButton}">
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RadioButton}">
+                        <Border BorderThickness="{TemplateBinding Property=BorderThickness}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Background="Transparent"
+                            CornerRadius="5">
+                            <Image Source="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsChecked" Value="False">
+                    <Setter Property="Opacity" Value="0.5"/>
+                </Trigger>
+            </Style.Triggers>
+
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="White" Height="36" Width="178">
+        <Grid.Resources>
+            <Style x:Key="Direction" TargetType="RadioButton">
+                <Style.Triggers>
+                    <Trigger Property="IsChecked" Value="False">
+                        <Setter Property="Opacity" Value="0.3"/>
+                    </Trigger>
+                </Style.Triggers>
+
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="RadioButton">
+                            <Border BorderThickness="{TemplateBinding BorderThickness}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    Background="Transparent"
+                                    CornerRadius="5">
+                                <Image Source="{Binding Path=Content, RelativeSource={RelativeSource TemplatedParent}}"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </Grid.Resources>
+
+
+        <RadioButton Content="\TFH Combo Editor;component\Resources\Up.png" Style ="{StaticResource Direction}" IsChecked="{Binding ValueAs6, Mode=TwoWay}" BorderBrush="#00000000" Margin="13,2,155,24" RenderTransformOrigin="0.5,0.5" Background="#FFACACAC" Width="10" Height="10"/>
+        <RadioButton Content="\TFH Combo Editor;component\Resources\UpLeft.png" Style ="{StaticResource Direction}" IsChecked="{Binding ValueAs5, Mode=TwoWay}" BorderBrush="#00000000" Margin="2,2,166,24" RenderTransformOrigin="0.5,0.5" Background="#FFACACAC" Width="10" Height="10"/>
+        <RadioButton Content="\TFH Combo Editor;component\Resources\UpRight.png" Style ="{StaticResource Direction}" IsChecked="{Binding ValueAs7, Mode=TwoWay}" BorderBrush="#00000000" Margin="23,2,145,24" RenderTransformOrigin="0.5,0.5" Background="#FFACACAC" Width="10" Height="10"/>
+        <RadioButton Content="\TFH Combo Editor;component\Resources\Left.png" Style ="{StaticResource Direction}" IsChecked="{Binding ValueAs4, Mode=TwoWay}" BorderBrush="#00000000" Margin="2,13,166,13" RenderTransformOrigin="0.5,0.5" Background="#FFACACAC" Width="10" Height="10"/>
+        <RadioButton Content="\TFH Combo Editor;component\Resources\Center.png" Style ="{StaticResource Direction}" IsChecked="{Binding ValueAs8, Mode=TwoWay}" BorderBrush="#00000000" Margin="13,13,155,13" RenderTransformOrigin="0.5,0.5" Background="#FFACACAC" Width="10" Height="10"/>
+        <RadioButton Content="\TFH Combo Editor;component\Resources\Right.png" Style ="{StaticResource Direction}" IsChecked="{Binding ValueAs0, Mode=TwoWay}" BorderBrush="#00000000" Margin="23,13,145,13" RenderTransformOrigin="0.5,0.5" Background="#FFACACAC" Width="10" Height="10"/>
+        <RadioButton Content="\TFH Combo Editor;component\Resources\DownLeft.png" Style ="{StaticResource Direction}" IsChecked="{Binding ValueAs3, Mode=TwoWay}" BorderBrush="#00000000" Margin="2,24,166,2" RenderTransformOrigin="0.5,0.5" Background="#FFACACAC" Width="10" Height="10"/>
+        <RadioButton Content="\TFH Combo Editor;component\Resources\Down.png" Style ="{StaticResource Direction}" IsChecked="{Binding ValueAs2, Mode=TwoWay}" BorderBrush="#00000000" Margin="13,24,155,2" RenderTransformOrigin="0.5,0.5" Background="#FFACACAC" Width="10" Height="10"/>
+        <RadioButton Content="\TFH Combo Editor;component\Resources\DownRight.png" Style ="{StaticResource Direction}" IsChecked="{Binding ValueAs1, Mode=TwoWay}" BorderBrush="#00000000" Margin="23,24,145,2" RenderTransformOrigin="0.5,0.5" Background="#FFACACAC" Width="10" Height="10"/>
+        <CheckBox x:Name="checkBoxA" Content="A" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="60,4,0,0" IsChecked="{Binding aChecked, Mode=TwoWay}" Padding="0"/>
+        <CheckBox x:Name="checkBoxB" Content="B" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,4,0,0" IsChecked="{Binding bChecked, Mode=TwoWay}" Padding="0"/>
+        <CheckBox x:Name="checkBoxC" Content="C" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="120,4,0,0" IsChecked="{Binding cChecked, Mode=TwoWay}" Padding="0"/>
+        <CheckBox x:Name="checkBoxD" Content="D" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,4,0,0" IsChecked="{Binding dChecked, Mode=TwoWay}" Padding="0"/>
+
     </Grid>
 </UserControl>

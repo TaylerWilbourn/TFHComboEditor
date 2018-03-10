@@ -62,6 +62,11 @@ namespace TFH_Combo_Editor
 		private void SaveButton_Click(object sender, RoutedEventArgs e)
 		{
 			FM.SaveFile(this.inputLists);
+			this.inputLists[0][0].direction++;
+			if (this.inputLists[0][0].direction > 8)
+			{
+				this.inputLists[0][0].direction = 0;
+			}
 		}
 	}
 }

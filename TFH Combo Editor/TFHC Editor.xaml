@@ -9,8 +9,7 @@
     <Grid>
         <TextBlock x:Name="Inputs" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Inputs" VerticalAlignment="Top"/>
         <ScrollViewer HorizontalAlignment="Left" Height="312" Margin="47,55,0,0" VerticalAlignment="Top" Width="469">
-            <ListBox x:Name="inputListBox" HorizontalAlignment="Left" Height="1394" VerticalAlignment="Top" Width="459">
-            </ListBox>
+            <ListBox x:Name="inputListBox" HorizontalAlignment="Left" Height="1394" VerticalAlignment="Top" Width="459"/>
         </ScrollViewer>
         <Button x:Name="SaveButton" Content="Save" Click="SaveButton_Click" HorizontalAlignment="Left" Margin="533,111,0,0" VerticalAlignment="Top" Width="75"/>
     </Grid>
